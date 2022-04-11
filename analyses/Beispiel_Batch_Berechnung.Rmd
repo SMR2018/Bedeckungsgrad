@@ -16,7 +16,7 @@ source("batch_bedeckungsgrad.R")
 file_list <- list.files(path = "../data/", pattern = "jpg")
 file_list
 ```
-# Anwendung fuer eine einzelnes Bild:
+# Anwendung fuer ein einzelnes Bild:
 ```{r}
 a <- batch_bedeckungsgrad(image_in_path = "../data/",
                           image_in_file = "F4a_Tag_25.JPG", 
@@ -37,31 +37,35 @@ alle_bedeckungsgrade <-
 ```{r}
 alle_bedeckungsgrade
 ```
-```{r }
-"../figures/Spinat_2020/Spinat1.jpg_input_resized.jpeg"
+
+#Tabelle speichern:
+```{r}
+data.table::fwrite(alle_bedeckungsgrade, file = "../data/bedeckungsgrade.csv", sep = ";")
 ```
 
-![](../figures/Spinat_2020/Spinat1.jpg_input_resized.jpeg) ![](../figures/Spinat_2020/Spinat1.jpg) 
-
-![](../figures/Spinat_2020/Spinat2.jpg_input_resized.jpeg) ![](../figures/Spinat_2020/Spinat2.jpg)  
-
-![](../figures/Spinat_2020/Spinat3.jpg_input_resized.jpeg) ![](../figures/Spinat_2020/Spinat3.jpg)  
-
-![](../figures/Spinat_2020/Spinat4.jpg_input_resized.jpeg) ![](../figures/Spinat_2020/Spinat4.jpg)  
-
-![](../figures/Spinat_2020/Spinat5.jpg_input_resized.jpeg) ![](../figures/Spinat_2020/Spinat5.jpg)  
-
-![](../figures/Spinat_2020/Spinat6.jpg_input_resized.jpeg) ![](../figures/Spinat_2020/Spinat6.jpg)  
-
-![](../figures/Spinat_2020/Spinat7.jpg_input_resized.jpeg) ![](../figures/Spinat_2020/Spinat7.jpg)  
 
 
+## Bilder: Bedeckungsgrad:
+Bedeckungsgrad: `r alle_bedeckungsgrade$Bedeckungsgrad[1]` %  
+![](../figures/Spinat_2020/Spinat1.jpg_input_resized.jpeg){#id .class width=300px} ![](../figures/Spinat_2020/Spinat1.jpg){#id .class width=300px} 
+
+Bedeckungsgrad: `r alle_bedeckungsgrade$Bedeckungsgrad[2]` %  
+![](../figures/Spinat_2020/Spinat2.jpg_input_resized.jpeg){#id .class width=300px} ![](../figures/Spinat_2020/Spinat2.jpg){#id .class width=300px}  
+
+Bedeckungsgrad: `r alle_bedeckungsgrade$Bedeckungsgrad[3]` %  
+![](../figures/Spinat_2020/Spinat3.jpg_input_resized.jpeg){#id .class width=300px} ![](../figures/Spinat_2020/Spinat3.jpg){#id .class width=300px}  
+
+Bedeckungsgrad: `r alle_bedeckungsgrade$Bedeckungsgrad[4]` %  
+![](../figures/Spinat_2020/Spinat4.jpg_input_resized.jpeg){#id .class width=300px} ![](../figures/Spinat_2020/Spinat4.jpg){#id .class width=300px}  
+
+Bedeckungsgrad: `r alle_bedeckungsgrade$Bedeckungsgrad[5]` %  
+![](../figures/Spinat_2020/Spinat5.jpg_input_resized.jpeg){#id .class width=300px} ![](../figures/Spinat_2020/Spinat5.jpg){#id .class width=300px}  
+
+Bedeckungsgrad: `r alle_bedeckungsgrade$Bedeckungsgrad[6]` %  
+![](../figures/Spinat_2020/Spinat6.jpg_input_resized.jpeg){#id .class width=300px} ![](../figures/Spinat_2020/Spinat6.jpg){#id .class width=300px}
+
+Bedeckungsgrad: `r alle_bedeckungsgrade$Bedeckungsgrad[7]` %  
+![](../figures/Spinat_2020/Spinat7.jpg_input_resized.jpeg){#id .class width=300px} ![](../figures/Spinat_2020/Spinat7.jpg){#id .class width=300px}
 
 
-# Tst2
-```{r echo=FALSE,out.width="49%", out.height="20%",fig.cap="caption",fig.show='hold',fig.align='center'}
-
-knitr::include_graphics(c(paste0("../figures/Spinat_2020/", file_list[1:2])))
-
-```
 
