@@ -1,71 +1,108 @@
 ---
 title: "Beispiel Batch Funktion Bedeckungsgrad"
-output: html_notebook
+subtitle: "Spinat-Bilder"
+author: "Samantha Rubo"
+date: "2022-04-04"
+output:
+  pdf_document: default
 ---
 
-```{r}
+```{r include=FALSE}
 library(dplyr)
 library(purrr)
 ```
 
-```{r}
+```{r include=FALSE}
 source("batch_bedeckungsgrad.R")
 ```
 
+
+## Pfade zu Input- und Output-Bildern und CSV:
 ```{r}
-file_list <- list.files(path = "../data/", pattern = "jpg")
-file_list
-```
-# Anwendung fuer ein einzelnes Bild:
-```{r}
-a <- batch_bedeckungsgrad(image_in_path = "../data/",
-                          image_in_file = "F4a_Tag_25.JPG", 
-                          image_out_path = "../figures/Spinat_2020/",
-                          image_out_file = "Bedeckungsgrad1.jpeg")
+base_path_name <- "X20220404_Beispiel_Spinat/"
 ```
 
-# Anwendung fuer ganzen Ordner:
-```{r}
+```{r, echo=FALSE}
+image_in_path = paste0("../data/input_images/", base_path_name)
+image_in_resized_path = paste0("../data/input_images_resized/", base_path_name)
+image_out_path = paste0("../data/output_images/", base_path_name)
+csv_output_path = paste0("../data/Bedeckungsgrad_csv/", basename(base_path_name), 
+                         "_Bedeckungsgrade.csv")
+cat(paste("Dateipfade: \n",
+          "image_in_path = ", image_in_path,"\n",
+          "image_in_resized_path = ",image_in_resized_path,"\n",
+          "image_out_path = ",image_out_path,"\n",
+          "csv_output_path = ",csv_output_path
+))
+```
+
+```{r, message=FALSE, echo=FALSE, warning=TRUE, include=FALSE}
+### Output-Ordner erstellen: 
+
+map(list(image_in_resized_path,image_out_path),
+    ~if (!dir.exists(.x)){
+        dir.create(.x); print(paste("Ordner", .x, "wurde erstellt."))
+    } else {
+        warning(paste("Ordner", .x, "existiert bereits!"))
+    }
+)
+```
+
+```{r include=FALSE}
+# Bilder-Namen aus Ordner auslesen (momentan für jpg)
+
+file_list <- list.files(path = image_in_path, 
+                        pattern = "jpg")
+file_list
+
+file_list_ohne_extension <- tools::file_path_sans_ext(file_list)
+```
+\
+
+## Batch-Funktion anwenden:
+
+### A) Anwendung der Funktion fuer ein einzelnes Bild
+```{r eval=FALSE, include=FALSE}
+a <- batch_bedeckungsgrad(image_in_path = image_in_path,
+                          image_in_resized_path = image_in_resized_path,
+                          image_in_file = "Spinat1.jpg", 
+                          image_out_path = image_out_path,
+                          image_out_file = "Spinat1_Bedeckungsgrad.jpeg")
+a
+```
+
+### B) Anwendung fuer ganzen Ordner
+```{r include=FALSE}
 alle_bedeckungsgrade <- 
-    map_df(file_list,
-           ~batch_bedeckungsgrad(image_in_path = "../data/",
-                                 image_in_file = .x, 
-                                 image_out_path = "../figures/Spinat_2020/",
-                                 image_out_file = .x)
+    map2_df(file_list,file_list_ohne_extension,
+            ~batch_bedeckungsgrad(image_in_path = image_in_path,
+                                  image_in_resized_path = image_in_resized_path,
+                                  image_in_file = .x, 
+                                  image_out_path = image_out_path,
+                                  image_out_file = paste0(.y, "_Bedeckungsgrad.jpeg"))
     )
 ```
-```{r}
-alle_bedeckungsgrade
+
+```{r, echo=FALSE}
+## Tabelle speichern:
+data.table::fwrite(alle_bedeckungsgrade, file = csv_output_path, sep = ";")
 ```
 
-#Tabelle speichern:
-```{r}
-data.table::fwrite(alle_bedeckungsgrade, file = "../data/bedeckungsgrade.csv", sep = ";")
+\
+
+## Bilder Bedeckungsgrad:
+```{r echo=FALSE, results="asis"}
+for (i in 1:length(file_list_ohne_extension)){
+    cat(paste0("![](",paste0(image_in_resized_path,
+                             file_list_ohne_extension[i],
+                             "_resized.jpeg"), "){#id .class width=200px}", 
+               "\n",
+               "![](",paste0(image_out_path,
+                             file_list_ohne_extension[i],
+                             "_Bedeckungsgrad.jpeg"), "){#id .class width=200px}",
+               "   ", alle_bedeckungsgrade$Bedeckungsgrad_prozent[i], "%",
+               "\n\n\n"))
+}
 ```
-
-
-
-## Bilder: Bedeckungsgrad:
-Bedeckungsgrad: `r alle_bedeckungsgrade$Bedeckungsgrad[1]` %  
-![](../figures/Spinat_2020/Spinat1.jpg_input_resized.jpeg){#id .class width=300px} ![](../figures/Spinat_2020/Spinat1.jpg){#id .class width=300px} 
-
-Bedeckungsgrad: `r alle_bedeckungsgrade$Bedeckungsgrad[2]` %  
-![](../figures/Spinat_2020/Spinat2.jpg_input_resized.jpeg){#id .class width=300px} ![](../figures/Spinat_2020/Spinat2.jpg){#id .class width=300px}  
-
-Bedeckungsgrad: `r alle_bedeckungsgrade$Bedeckungsgrad[3]` %  
-![](../figures/Spinat_2020/Spinat3.jpg_input_resized.jpeg){#id .class width=300px} ![](../figures/Spinat_2020/Spinat3.jpg){#id .class width=300px}  
-
-Bedeckungsgrad: `r alle_bedeckungsgrade$Bedeckungsgrad[4]` %  
-![](../figures/Spinat_2020/Spinat4.jpg_input_resized.jpeg){#id .class width=300px} ![](../figures/Spinat_2020/Spinat4.jpg){#id .class width=300px}  
-
-Bedeckungsgrad: `r alle_bedeckungsgrade$Bedeckungsgrad[5]` %  
-![](../figures/Spinat_2020/Spinat5.jpg_input_resized.jpeg){#id .class width=300px} ![](../figures/Spinat_2020/Spinat5.jpg){#id .class width=300px}  
-
-Bedeckungsgrad: `r alle_bedeckungsgrade$Bedeckungsgrad[6]` %  
-![](../figures/Spinat_2020/Spinat6.jpg_input_resized.jpeg){#id .class width=300px} ![](../figures/Spinat_2020/Spinat6.jpg){#id .class width=300px}
-
-Bedeckungsgrad: `r alle_bedeckungsgrade$Bedeckungsgrad[7]` %  
-![](../figures/Spinat_2020/Spinat7.jpg_input_resized.jpeg){#id .class width=300px} ![](../figures/Spinat_2020/Spinat7.jpg){#id .class width=300px}
-
 
 

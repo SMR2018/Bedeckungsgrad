@@ -1,4 +1,4 @@
-# BEdeckungsgraf-Funktion füer batch-Verarbeitung:
+# BEdeckungsgraf-Funktion fuer batch-Verarbeitung:
 # Autorin: Samantha Rubo
 # Datum: 05.04.2022
 
@@ -6,6 +6,7 @@
 
 
 batch_bedeckungsgrad <- function(image_in_path,
+                                 image_in_resized_path,
                                  image_in_file, 
                                  image_out_path, 
                                  image_out_file,
@@ -21,7 +22,6 @@ batch_bedeckungsgrad <- function(image_in_path,
     ############  1. Bild einlesen und downsamplen     #######################
     ##########################################################################
     img <- readJPEG(paste0(image_in_path, image_in_file))
-    
     #resize image to width = 100 pixels
     imgDm <- dim(img)
     height1 <- 300
@@ -39,7 +39,6 @@ batch_bedeckungsgrad <- function(image_in_path,
     ##########################################################################
     ############  2. excess green (ExG) berechnen      #######################
     ##########################################################################
-    img <- readJPEG("../data/F4a_Tag_25.JPG")
     #excess green index (ExG = 2 g - r-b)
     ExG <- 2*img2[,,2] - img2[,,1] - img2[,,3] #von sRGB, nicht von Normalisiertem Bild!
     
@@ -62,13 +61,17 @@ batch_bedeckungsgrad <- function(image_in_path,
     OpenImageR::imageShow(ExG_Otsu) #ExG_Otsu
     dev.off()
 
-    jpeg(filename = paste0(image_out_path,image_out_file, "_input_resized.jpeg"), 
+    jpeg(filename = paste0(image_in_resized_path,
+                           tools::file_path_sans_ext(image_in_file), 
+                           "_resized.jpeg"),
          width = width1, height = height1)
     OpenImageR::imageShow(img2) #ExG_Otsu
-    dev.off()    
+    dev.off()
     
     ##########################################################################
     ############  5. Objekt ausgeben      ####################################
     ##########################################################################
-    data.frame(Pfad = image_in_path, Bild = image_in_file, Bedeckungsgrad = Bedeckungsgrad)
+    data.frame(Pfad = image_in_path, 
+               Bild = image_in_file, 
+               Bedeckungsgrad_prozent = Bedeckungsgrad)
 }
