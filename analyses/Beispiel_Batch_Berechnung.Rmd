@@ -14,6 +14,7 @@ library(purrr)
 
 ```{r include=FALSE}
 source("batch_bedeckungsgrad.R")
+image_format <- "jpg"
 ```
 
 
@@ -52,7 +53,7 @@ map(list(image_in_resized_path,image_out_path),
 # Bilder-Namen aus Ordner auslesen (momentan für jpg)
 
 file_list <- list.files(path = image_in_path, 
-                        pattern = "jpg")
+                        pattern = image_format)
 file_list
 
 file_list_ohne_extension <- tools::file_path_sans_ext(file_list)
