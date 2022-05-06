@@ -1,10 +1,8 @@
 ---
 title: "Beispiel Batch Funktion Bedeckungsgrad"
-subtitle: "Spinat-Bilder"
-author: "Samantha Rubo"
-date: "2022-04-04"
-output:
-  pdf_document: default
+author: "Victoria Altvater"
+date: '2022-04-20'
+output: pdf_document
 ---
 
 ```{r include=FALSE}
@@ -14,13 +12,13 @@ library(purrr)
 
 ```{r include=FALSE}
 source("batch_bedeckungsgrad.R")
-image_format <- "jpg"
 ```
 
 
 ## Pfade zu Input- und Output-Bildern und CSV:
 ```{r}
-base_path_name <- "X20220404_Beispiel_Spinat/"
+base_path_name <- "X20220420_Zwiebel/"
+image_format <- "jpeg"
 ```
 
 ```{r, echo=FALSE}
@@ -53,7 +51,7 @@ map(list(image_in_resized_path,image_out_path),
 # Bilder-Namen aus Ordner auslesen (momentan für jpg)
 
 file_list <- list.files(path = image_in_path, 
-                        pattern = image_format)
+                        pattern =  image_format)
 file_list
 
 file_list_ohne_extension <- tools::file_path_sans_ext(file_list)
