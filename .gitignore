@@ -40,6 +40,7 @@ vignettes/*.pdf
 
 *.DS_Store
 
-#Bilder:
-data/input_in*
-data/input_out*
+#Bilder nicht übertragen:
+data/input_images/
+data/output_images/
+data/input_images_resized/
