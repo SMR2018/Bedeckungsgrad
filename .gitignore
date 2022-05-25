@@ -39,3 +39,7 @@ vignettes/*.pdf
 .Renviron
 
 *.DS_Store
+
+#Bilder:
+data/input_in*
+data/input_out*
