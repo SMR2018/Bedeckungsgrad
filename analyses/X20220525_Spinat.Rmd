@@ -17,7 +17,7 @@ source("batch_bedeckungsgrad.R")
 
 ## Pfade zu Input- und Output-Bildern und CSV:
 ```{r}
-base_path_name <- "X20220525_Spinat/"
+base_path_name <- "X20220525_Spinat_Satz1/"
 image_format <- "jpeg"
 ```
 
