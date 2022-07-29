@@ -10,7 +10,8 @@ batch_bedeckungsgrad <- function(image_in_path,
                                  image_in_file, 
                                  image_out_path, 
                                  image_out_file,
-                                 t1 = 0.2){
+                                 t1 = 0.2,
+                                 brighten_dark_spots = FALSE){
     
     library(dplyr)
     library(jpeg)
@@ -34,6 +35,30 @@ batch_bedeckungsgrad <- function(image_in_path,
     rm(img)
     gc()
     
+    
+    ##########################################################################
+    ############  1.b Dunkle Stellen aufhellen (bei großen Pflanzen) #########
+    ##########################################################################
+    # Gamma-Korrektur:
+    # img2 <- if(brighten_dark_spots == TRUE) {
+    #     OpenImageR::gamma_correction(img2, gamma = 2)} else{
+    #         img2}
+    
+    
+    #Dunkle Bereiche transformieren:
+    dark_to_light_green <- function(image){
+    #Auswahl der dunklen Bereiche im grünen Kanal:
+    idx2 <- image[,,2] < 0.4
+    
+    #Daten transformieren:
+    x <- (image[,,2][idx2])^(1/3)
+    x <- scales::rescale(x, to = c(0,0.4))
+    image[,,2][idx2] <- x
+    image
+    }
+    img2 <- if(brighten_dark_spots == TRUE) {
+        dark_to_light_green(image = img2)} else{
+            img2}
     
     
     ##########################################################################
