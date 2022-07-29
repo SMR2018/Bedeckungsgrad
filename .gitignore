@@ -39,3 +39,8 @@ vignettes/*.pdf
 .Renviron
 
 *.DS_Store
+
+#Bilder nicht übertragen:
+data/input_images/
+#data/output_images/
+#data/input_images_resized/

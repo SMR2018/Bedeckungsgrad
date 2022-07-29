@@ -1,0 +1,109 @@
+---
+title: "Bedeckungsgrad 2022_001_Spinat_F4a_Satz_1, Messtag 4"
+subtitle: "DAS xx"
+author: "Samantha Rubo"
+date: "2022-05-25"
+output:
+  pdf_document: default
+---
+
+```{r include=FALSE}
+library(dplyr)
+library(purrr)
+```
+
+```{r include=FALSE}
+source("batch_bedeckungsgrad.R")
+image_format <- "JPEG"
+```
+
+
+## Pfade zu Input- und Output-Bildern und CSV:
+```{r}
+base_path_name <- "X20220525_Spinat_Satz1/"
+```
+
+```{r, echo=FALSE}
+image_in_path = paste0("../data/input_images/", base_path_name)
+image_in_resized_path = paste0("../data/input_images_resized/", base_path_name)
+image_out_path = paste0("../data/output_images/", base_path_name)
+csv_output_path = paste0("../data/Bedeckungsgrad_csv/", basename(base_path_name), 
+                         "_Bedeckungsgrade.csv")
+cat(paste("Dateipfade: \n",
+          "image_in_path = ", image_in_path,"\n",
+          "image_in_resized_path = ",image_in_resized_path,"\n",
+          "image_out_path = ",image_out_path,"\n",
+          "csv_output_path = ",csv_output_path
+))
+```
+
+```{r, message=FALSE, echo=FALSE, warning=TRUE, include=FALSE}
+### Output-Ordner erstellen: 
+
+map(list(image_in_resized_path,image_out_path),
+    ~if (!dir.exists(.x)){
+        dir.create(.x); print(paste("Ordner", .x, "wurde erstellt."))
+    } else {
+        warning(paste("Ordner", .x, "existiert bereits!"))
+    }
+)
+```
+
+```{r include=FALSE}
+# Bilder-Namen aus Ordner auslesen (momentan für jpg)
+
+file_list <- list.files(path = image_in_path, 
+                        pattern = image_format)
+file_list
+
+file_list_ohne_extension <- tools::file_path_sans_ext(file_list)
+```
+\
+
+## Batch-Funktion anwenden:
+
+### A) Anwendung der Funktion fuer ein einzelnes Bild
+```{r eval=FALSE, include=FALSE}
+a <- batch_bedeckungsgrad(image_in_path = image_in_path,
+                          image_in_resized_path = image_in_resized_path,
+                          image_in_file = "Spinat1.jpg", 
+                          image_out_path = image_out_path,
+                          image_out_file = "Spinat1_Bedeckungsgrad.jpeg")
+a
+```
+
+### B) Anwendung fuer ganzen Ordner
+```{r include=FALSE}
+alle_bedeckungsgrade <- 
+    map2_df(file_list,file_list_ohne_extension,
+            ~batch_bedeckungsgrad(image_in_path = image_in_path,
+                                  image_in_resized_path = image_in_resized_path,
+                                  image_in_file = .x, 
+                                  image_out_path = image_out_path,
+                                  image_out_file = paste0(.y, "_Bedeckungsgrad.jpeg"))
+    )
+```
+
+```{r, echo=FALSE}
+## Tabelle speichern:
+data.table::fwrite(alle_bedeckungsgrade, file = csv_output_path, sep = ";")
+```
+
+\
+
+## Bilder Bedeckungsgrad:
+```{r echo=FALSE, results="asis"}
+for (i in 1:length(file_list_ohne_extension)){
+    cat(paste0("![](",paste0(image_in_resized_path,
+                             file_list_ohne_extension[i],
+                             "_resized.jpeg"), "){#id .class width=200px}", 
+               "\n",
+               "![](",paste0(image_out_path,
+                             file_list_ohne_extension[i],
+                             "_Bedeckungsgrad.jpeg"), "){#id .class width=200px}",
+               "   ", alle_bedeckungsgrade$Bedeckungsgrad_prozent[i], "%",
+               "\n\n\n"))
+}
+```
+
+
