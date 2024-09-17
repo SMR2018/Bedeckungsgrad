@@ -1,3 +1,8 @@
+---
+author: "Samantha Rubo"
+date: '2024-08-31'
+---
+
 # Bedeckungsgrad
 
 
@@ -28,3 +33,8 @@ Die Order-Struktur des Projektes ist zu beachten:
 -	Output-CSV unter data/Bedeckungsgrad_csv/… eigenerOrdner_Bedeckungsgrade.csv (automatisch erstellt)
 
 Das Skript Beispiel_Batch_Berechnung.Rmd sollte vor jeder Durchführung (d.h neuer Ordner mit Bildern) im selben Ordner kopiert und umbenannt werden.
+
+
+### Beispiel:
+![Bedeckungsgrad Spinat (%)](data/output_images/Bedeckungsgrad_Beispiel.png)
+
