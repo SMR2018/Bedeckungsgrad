@@ -1,1 +1,0 @@
-Die Originalbilder wurden in IrfanView geändert: Batch conversion -500px unten abgeschnitten und 30% Größe.
